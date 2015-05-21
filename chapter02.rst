@@ -454,14 +454,26 @@ if you haven't already, and run this command::
 
 You'll see something like this::
 
-    Validating models...
-    0 errors found.
 
-    Django version 1.4.2, using settings 'mysite.settings'
-    Development server is running at http://127.0.0.1:8000/
+    Performing system checks...
+
+    System check identified no issues (0 silenced).
+
+    You have unapplied migrations; your app may not work properly until they are applied.
+    Run 'python manage.py migrate' to apply them.
+
+    May 21, 2015 - 13:34:39
+    Django version 1.8.2, using settings 'mysite.settings'
+    Starting development server at http://127.0.0.1:8000/
     Quit the server with CONTROL-C.
 
-This launches the server locally, on port 8000, accessible only to connections
+.. note::
+
+  We've seen a warning in red color,
+  ``You have unapplied migrations; your app may not work properly until they are applied. Run 'python manage.py migrate' to apply them.``  We will discuss about migrations in the next chapter. For now just ignore the warning and move on to the next section.
+
+
+This command launches the server locally, on port 8000, accessible only to connections
 from your own computer. Now that it's running, visit http://127.0.0.1:8000/
 with your Web browser. You might see a different Django version depending on
 which version of Django you have installed. You'll see a "Welcome to Django" page shaded in a
