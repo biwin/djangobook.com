@@ -269,6 +269,51 @@ key feature of Python (and other dynamic languages): functions are first-class
 objects, which means you can pass them around just like any other variables.
 Cool stuff, eh?
 
+Database Migrations
+===================
+Our simple view function does not use any database, but there are some default applications
+included by default as convenience. Take a look at ``INSTALLED_APPS`` on the ``mysite/settings.py``.::
+
+    INSTALLED_APPS = (
+        'django.contrib.admin',
+        'django.contrib.auth',
+        'django.contrib.contenttypes',
+        'django.contrib.sessions',
+        'django.contrib.messages',
+        'django.contrib.staticfiles',
+    )
+
+Some of these applications make use of at least one database table, so we need create the tables in database before we can use them. Django can create those tables required by the installed applications with the command ``migrate``
+
+To do that, run the following command at the project root where ``manage.py`` is located.::
+
+    python manage.py migrate
+
+The terminal output looks something like this::
+
+    Operations to perform:
+      Synchronize unmigrated apps: staticfiles, messages
+      Apply all migrations: admin, contenttypes, auth, sessions
+    Synchronizing apps without migrations:
+      Creating tables...
+        Running deferred SQL...
+      Installing custom SQL...
+    Running migrations:
+      Rendering model states... DONE
+      Applying contenttypes.0001_initial... OK
+      Applying auth.0001_initial... OK
+      Applying admin.0001_initial... OK
+      Applying contenttypes.0002_remove_content_type_name... OK
+      Applying auth.0002_alter_permission_name_max_length... OK
+      Applying auth.0003_alter_user_email_max_length... OK
+      Applying auth.0004_alter_user_username_opts... OK
+      Applying auth.0005_alter_user_last_login_null... OK
+      Applying auth.0006_require_contenttypes_0002... OK
+      Applying sessions.0001_initial... OK
+
+The ``migrate`` command looks at the ``INSTALLED_APPS`` located in the settings.py and creates any necessary database tables.
+
+
 To test our changes to the URLconf, start the Django development server, as you
 did in Chapter 2, by running the command ``python manage.py runserver``. (If you
 left it running, that's fine, too. The development server automatically detects
