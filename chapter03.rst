@@ -96,80 +96,82 @@ When you executed ``django-admin.py startproject`` in the previous chapter, the
 script created a URLconf for you automatically: the file ``urls.py``. By
 default, it looks something like this::
 
-    from django.conf.urls import patterns, include, url
+    """mysite URL Configuration
 
-    # Uncomment the next two lines to enable the admin:
-    # from django.contrib import admin
-    # admin.autodiscover()
+    The `urlpatterns` list routes URLs to views. For more information please see:
+        https://docs.djangoproject.com/en/1.8/topics/http/urls/
+    Examples:
+    Function views
+        1. Add an import:  from my_app import views
+        2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
+    Class-based views
+        1. Add an import:  from other_app.views import Home
+        2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
+    Including another URLconf
+        1. Add an import:  from blog import urls as blog_urls
+        2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
+    """
 
-    urlpatterns = patterns('',
-        # Examples:
-        # url(r'^$', 'mysite.views.home', name='home'),
-        # url(r'^mysite/', include('mysite.foo.urls')),
+    from django.conf.urls import include, url
+    from django.contrib import admin
 
-        # Uncomment the admin/doc line below to enable admin documentation:
-        # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    urlpatterns = [
+        url(r'^admin/', include(admin.site.urls)),
+    ]
 
-        # Uncomment the next line to enable the admin:
-        # url(r'^admin/', include(admin.site.urls)),
-    )
 
-This default URLconf includes some commonly used Django features commented out,
-so that activating those features is as easy as uncommenting the appropriate
-lines. If we ignore the commented-out code, here's the essence of a URLconf::
+This is the default URLconf from Django versions 1.8 onwards, The mulitline comments
+include examples of different URL configurations. Lets ignore the comments and dive
+into the url configuration.::
 
-    from django.conf.urls.defaults import patterns, include, url
+    from django.conf.urls import include, url
+    from django.contrib import admin
 
-    urlpatterns = patterns('',
-    )
+    urlpatterns = [
+        url(r'^admin/', include(admin.site.urls)),
+        
+    ]
+
 
 Let's step through this code one line at a time:
 
-* The first line imports three functions from the ``django.conf.urls.defaults``
-  module, which is Django's URLconf infrastructure: ``patterns``, ``include``,
-  and ``urls``.
+* The first line imports two functions from the ``django.conf.urls`` module, which is Django's
+  URLconf infrastructure: ``include``  and ``url``.
 
-* The second line calls the function ``patterns`` and saves the result
-  into a variable called ``urlpatterns``. The ``patterns`` function gets
-  passed only a single argument -- the empty string. (The string can be
-  used to supply a common prefix for view functions, which we'll cover in
-  :doc:`chapter08`.)
+* The second line import the method ``admin`` from the module ``django.contrib`` which is useful
+  in configuring the Django admin site. We will come back to this later in chapter 06. <-[backlink]
+
+* The third line creates a list called ``urlpatterns``. The url() function is passed for arguments,
+  where two are required, the regular expression (**regex**) and **view**, two optional: **kwargs** and **name**. Lets make it clear by the next section where we actually type in our first url configuration.
+
 
 The main thing to note here is the variable ``urlpatterns``, which Django
 expects to find in your URLconf module. This variable defines the mapping
 between URLs and the code that handles those URLs. By default, as we can see,
-the URLconf is empty -- your Django application is a blank slate. (As a side
-note, that's how Django knew to show you the "Welcome to Django" page in the
-last chapter. If your URLconf is empty, Django assumes you just started a new
-project and, hence, displays that message.)
+the URLconf comes with admin configuration. (As a side note, that's how Django
+knew to show you the "Welcome to Django" page in the last chapter. If your URLconf
+is empty, Django assumes you just started a new project and, hence, displays that message.)
 
-To add a URL and view to the URLconf, just add a mapping between a URL
-pattern and the view function. Here's how to hook in our ``hello`` view::
 
-    from django.conf.urls.defaults import patterns, include, url
-    from mysite.views import hello
+To add our URL and view to the URLconf, just pass our regex and view to the function ``url()``. Here's how to hook in our ``hello`` view::
 
-    urlpatterns = patterns('',
-        url(r'^hello/$', hello),
-    )
 
+    from django.conf.urls import include, url
+    from django.contrib import admin
+
+    urlpatterns = [
+        url(r'^admin/', include(admin.site.urls)),
+        url(r'^hello/$', 'mysite.views.hello'),
+
+    ]
 (Note that we've removed the commented-out code for brevity. You can choose
 to leave those lines in, if you'd like.)
 
-We made two changes here:
+We made a single change here:
 
-* First, we imported the ``hello`` view from its module --
-  ``mysite/views.py``, which translates into ``mysite.views`` in Python
-  import syntax. (This assumes ``mysite/views.py`` is on your Python path;
-  see the sidebar for details.)
-
-* Next, we added the line ``url(r'^hello/$', hello),`` to ``urlpatterns``. This
-  line is referred to as a *URLpattern*. The ``url()`` function tells Django how
-  to handle the url that you are configuring. The first argument is a
-  pattern-matching string (a regular expression; more on this in a bit) and the
-  second argument is the view function to use for that pattern. ``url()`` can
-  take other optional arguments as well, which we'll cover in more depth in
-  :doc:`chapter08`.
+* The value that we passed to the function ``url()`` is ``r'^hello/$', 'mysite.views.hello'``
+  which has two parts, The regular rexpressoion ``r'^hello/&$`` and the view ``'mysite.views.hello'`` which is our view method that we just created above. This line is refered to as a
+  *URLpattern*. We can this in more detail on chapter 08 <-[backlink]
 
 .. note::
 
@@ -360,12 +362,12 @@ The URLpattern to match the site root is a bit unintuitive, though, so it's
 worth mentioning. When you're ready to implement a view for the site root, use
 the URLpattern ``'^$'``, which matches an empty string. For example::
 
-    from mysite.views import hello, my_homepage_view
+    from django.conf.urls import include, url
 
-    urlpatterns = patterns('',
-        url(r'^$', my_homepage_view),
-        # ...
-    )
+    urlpatterns = [
+        url(r'^$', 'mysite.views.homepage_view'),
+
+    ]
 
 How Django Processes a Request
 ==============================
@@ -513,13 +515,15 @@ After adding that to ``views.py``, add the URLpattern to ``urls.py`` to tell
 Django which URL should handle this view. Something like ``/time/`` would make
 sense::
 
-    from django.conf.urls.defaults import patterns, include, url
-    from mysite.views import hello, current_datetime
 
-    urlpatterns = patterns('',
-        url(r'^hello/$', hello),
-        url(r'^time/$', current_datetime),
-    )
+    from django.conf.urls import include, url
+    from django.contrib import admin
+
+    urlpatterns = [
+        url(r'^admin/', include(admin.site.urls)),
+        url(r'^hello/$', 'mysite.views.hello'),
+        url(r'^time/$', 'mysite.views.current_datetime'),
+    ]
 
 We've made two changes here. First, we imported the ``current_datetime``
 function at the top. Second, and more importantly, we added a URLpattern
@@ -566,11 +570,12 @@ without having to touch the view code. In this example, our
 ``current_datetime`` is available at two URLs. It's a contrived example, but
 this technique can come in handy::
 
-    urlpatterns = patterns('',
-        url(r'^hello/$', hello),
-        url(r'^time/$', current_datetime),
+    urlpatterns = [
+        url(r'^admin/', include(admin.site.urls)),
+        url(r'^hello/$', 'mysite.views.hello'),
+        url(r'^time/$', 'mysite.views.current_datetime'),
         url(r'^another-time-page/$', current_datetime),
-    )
+    ]
 
 URLconfs and views are loose coupling in action. We'll continue to point out
 examples of this important philosophy throughout this book.
@@ -594,13 +599,17 @@ on.
 A novice might think to code a separate view function for each hour offset,
 which might result in a URLconf like this::
 
-    urlpatterns = patterns('',
-        url(r'^time/$', current_datetime),
-        url(r'^time/plus/1/$', one_hour_ahead),
-        url(r'^time/plus/2/$', two_hours_ahead),
-        url(r'^time/plus/3/$', three_hours_ahead),
-        url(r'^time/plus/4/$', four_hours_ahead),
-    )
+    urlpatterns = [
+        url(r'^admin/', include(admin.site.urls)),
+        url(r'^hello/$', 'mysite.views.hello'),
+        url(r'^time/$', 'mysite.views.current_datetime'),
+        url(r'^another-time-page/$', 'mysite.views.current_datetime'),
+
+        url(r'^time/plus/1/$', 'mysite.views.one_hour_ahead'),
+        url(r'^time/plus/2/$', 'mysite.views.two_hours_ahead'),
+        url(r'^time/plus/3/$', 'mysite.views.three_hours_ahead'),
+        url(r'^time/plus/4/$', 'mysite.views.four_hours_ahead'),
+    ]
 
 Clearly, this line of thought is flawed. Not only would this result in redundant
 view functions, but also the application is fundamentally limited to supporting
@@ -633,7 +642,7 @@ is a regular expression; hence, we can use the regular expression pattern
 
     urlpatterns = patterns('',
         # ...
-        url(r'^time/plus/\d+/$', hours_ahead),
+        url(r'^time/plus/\d+/$', 'mysite.views.hours_ahead'),
         # ...
     )
 
@@ -646,7 +655,7 @@ let's limit it so that the maximum allowed offset is 99 hours. That means we
 want to allow either one- or two-digit numbers -- and in regular expression
 syntax, that translates into ``\d{1,2}``::
 
-    url(r'^time/plus/\d{1,2}/$', hours_ahead),
+    url(r'^time/plus/\d{1,2}/$', 'mysite.views.hours_ahead'),
 
 .. note::
 
@@ -662,21 +671,23 @@ data in the URLpattern that we want to save. In the case of our example, we
 want to save whatever number was entered in the URL, so let's put parentheses
 around the ``\d{1,2}``, like this::
 
-    url(r'^time/plus/(\d{1,2})/$', hours_ahead),
+    url(r'^time/plus/(\d{1,2})/$', 'mysite.views.hours_ahead'),
 
 If you're familiar with regular expressions, you'll be right at home here;
 we're using parentheses to *capture* data from the matched text.
 
 The final URLconf, including our previous two views, looks like this::
 
-    from django.conf.urls.defaults import *
-    from mysite.views import hello, current_datetime, hours_ahead
+    from django.conf.urls import include, url
+    from django.contrib import admin
 
-    urlpatterns = patterns('',
-        url(r'^hello/$', hello),
-        url(r'^time/$', current_datetime),
-        url(r'^time/plus/(\d{1,2})/$', hours_ahead),
-    )
+    urlpatterns = [
+        url(r'^admin/', include(admin.site.urls)),
+        url(r'^hello/$', 'mysite.views.hello'),
+        url(r'^time/$', 'mysite.views.current_datetime'),
+        url(r'^time/plus/(\d{1,2})/$', 'mysite.views.hours_ahead'),
+    ]
+
 
 With that taken care of, let's write the ``hours_ahead`` view.
 
