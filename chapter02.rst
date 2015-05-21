@@ -79,7 +79,7 @@ in the documentation and by members of the community.
 Installing an Official Release
 ------------------------------
 
-Official releases have a version number, such as 1.4.2, 1.4.1 or 1.4, and the latest
+Official releases have a version number, such as 1.8.2, 1.8.1 or 1.8, and the latest
 one is always available at http://www.djangoproject.com/download/.
 
 If you're on a Linux distribution that includes a package of Django, it's a
@@ -88,14 +88,14 @@ updates along with the rest of your system packages.
 
 If you don't have access to a prepackaged version, you can download and install
 the framework manually. To do so, first download the tarball, which will be
-named something like ``Django-1.4.2.tar.gz``. (It doesn't matter which
+named something like ``Django-1.8.2.tar.gz``. (It doesn't matter which
 local directory you download this file into; the installation process will put
 Django's files in the right place.) Then, unzip it and run ``setup.py install``,
 as you do with most Python libraries.
 
 Here's how that process looks on Unix systems:
 
-#. ``tar xzvf Django-1.4.2.tar.gz``
+#. ``tar xzvf Django-1.8.2.tar.gz``
 #. ``cd Django-*``
 #. ``sudo python setup.py install``
 
@@ -195,7 +195,7 @@ successful, you should be able to import the module ``django``:
 
     >>> import django
     >>> django.VERSION
-    (1, 4, 2, 'final', 0)
+    (1, 8, 2, 'final', 0)
 
 .. admonition:: Interactive Interpreter Examples
 
@@ -397,7 +397,7 @@ The ``startproject`` command creates a directory containing five files::
     The default project layout recently changed. If you're seeing a
     "flat" layout (with no inner ``mysite/`` directory), you're probably using
     a version of Django that doesn't match this tutorial version. This book covers
-    Django 1.4 and above, so if you're using an older version you probably want to
+    Django 1.8 and above, so if you're using an older version you probably want to
     consult Django's official documentation.
 
     The documentation for Django 1.X version is available at https://docs.djangoproject.com/en/1.X/.
@@ -428,7 +428,7 @@ These files are as follows:
   "table of contents" of your Django-powered site.
 
 * ``wsgi.py``: An entry-point for WSGI-compatible webservers to serve your project.
-  See How to deploy with WSGI (https://docs.djangoproject.com/en/1.4/howto/deployment/wsgi/) for more details.
+  See How to deploy with WSGI (https://docs.djangoproject.com/en/1.8/howto/deployment/wsgi/) for more details.
 
 Despite their small size, these files already constitute a working Django
 application.
